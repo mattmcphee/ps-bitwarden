@@ -74,7 +74,9 @@ $env:BW_SENT_COLL_ID = "0f3a5a11-66dc-4cf2-af8a-b00a0014d120"
 
 $baseUrl = "http://localhost:8087"
 $unlockEndpoint = "/unlock"
+$syncEndpoint = "/sync"
 $listItemsEndpoint = "/list/object/items"
+$editItemEndpoint = "/object/item/"
 
 $headers = @{
     "Accept"       = "application/json"
@@ -108,13 +110,74 @@ if ($null -eq $env:BW_SESSION) {
     $env:BW_SESSION = $seshKey
 }
 
-$parameters = @{
-    collectionIds = 'd663b595-1c92-43cc-82d5-b00a0014c32e'
+#sync the vault so the data is up to date
+$params = @{
+    Uri                     = "$($baseUrl)$($syncEndpoint)"
+    Method                  = 'Post'
+    Headers                 = $headers
+    Body                    = $null
+    ResponseHeadersVariable = $r
+    StatusCodeVariable      = $s
 }
-$res = Invoke-RestMethod `
-    -Uri "$($baseUrl)$($listItemsEndpoint)" `
-    -Method Get `
-    -Headers $headers `
-    -Body $parameters `
-    -ResponseHeadersVariable r `
-    -StatusCodeVariable s
+$res = Invoke-RestMethod @params
+if ($s -ne 200) {
+    throw "Could not sync vault. Exiting..."
+} else {
+    Write-Host "`nVault synced.`n"
+}
+
+$queryParams = @{
+    collectionId = "d663b595-1c92-43cc-82d5-b00a0014c32e"
+}
+$params = @{
+    Method                  = 'Get'
+    Uri                     = "$($baseUrl)$($listItemsEndpoint)"
+    Headers                 = $headers
+    Body                    = $queryParams
+    ResponseHeadersVariable = $r
+    StatusCodeVariable      = $s
+}
+$res = Invoke-RestMethod @params
+if ($s -ne 200) {
+    throw "Could not retrieve items in 'new' collection. Exiting..."
+} else {
+    Write-Host "`nItems in 'new' collection retrieved.`n"
+}
+
+#res.data.data now contains an array of items currently in the new collection
+#now we need to add the sent collection id and remove the new collection id
+#from each item
+$bwItems = $res.data.data
+foreach ($bwItem in $bwItems) {
+    $bwItem.login | Add-Member -MemberType NoteProperty -Name "uris" -Value $null -Force
+    $newItem = @{
+        object         = $bwItem.object
+        id             = $bwItem.id
+        organizationId = $bwItem.organizationId
+        collectionIds  = @('0f3a5a11-66dc-4cf2-af8a-b00a0014d120')
+        folderId       = $null
+        type           = 1
+        name           = $bwItem.name
+        notes          = $null
+        favorite       = $false
+        fields         = $null
+        login          = $bwItem.login
+        reprompt       = 0
+    }
+    $params = @{
+        Method                  = 'Put'
+        Uri                     = "$($baseUrl)$($editItemEndpoint)$($bwItem.id)"
+        Headers                 = $headers
+        Body                    = ($newItem | ConvertTo-Json)
+        ResponseHeadersVariable = $r
+        StatusCodeVariable      = $s
+    }
+    $res = Invoke-RestMethod @params
+    if ($s -ne 200) {
+        throw "Item edit failed. Exiting..."
+    } else {
+        Write-Host "success: $($res.success)"
+        Write-Host $res.data.collectionIds
+        Write-Host "`nItem '$($bwItem.name)' updated successfully.`n"
+    }
+}
