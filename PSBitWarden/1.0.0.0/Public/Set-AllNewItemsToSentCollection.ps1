@@ -23,7 +23,7 @@ function Set-AllNewItemsToSentCollection {
     Write-Host "setting each item's collection to users/sent ONLY"
     foreach ($item in $newItems) {
         Invoke-Command -ScriptBlock { "[$sentCollId]" | bw encode | bw edit item-collections $item.id } | Out-Null
-        Write-Host "$($item.name) done."
+        Write-Host "'$($item.name)' done."
     }
     Write-Host 'all items in users/new removed.'
 }

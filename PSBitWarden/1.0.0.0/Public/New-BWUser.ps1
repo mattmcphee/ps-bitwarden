@@ -74,5 +74,6 @@ function New-BWUser {
         reprompt       = 0
     }
 
+    Write-Host "creating $FirstName $LastName"
     $createdItemOutput = Invoke-Command -ScriptBlock { $vaultItem | ConvertTo-Json | bw encode | bw create item }
 }
