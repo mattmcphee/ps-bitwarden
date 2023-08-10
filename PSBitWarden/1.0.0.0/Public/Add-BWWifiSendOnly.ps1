@@ -23,7 +23,7 @@ User's personal email address (optional)
 .EXAMPLE
 Add-BWUser -FirstName matty -LastName test -Username mattes1 -InitialPass 'blah' -PersonalEmail matt@bmail.com
 #>
-function Add-WifiBWSendOnly {
+function Add-BWWifiSendOnly {
     [CmdletBinding()]
     param(
         # User's first name
