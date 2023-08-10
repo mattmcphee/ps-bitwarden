@@ -90,7 +90,7 @@ function Add-BWUser {
         notes = $null
         type = 0
         text = @{
-            text = "Username: $Username@bmd.com.au`nPassword: $InitialPass"
+            text = "Username: $Username`nPassword: $InitialPass"
             hidden = $false
         }
         file = $null
