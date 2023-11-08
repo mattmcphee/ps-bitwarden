@@ -5,12 +5,6 @@ Creates a send only.
 .DESCRIPTION
 Creates a new send with user's login details without creating a corresponding vault item (probably because it already exists).
 
-.PARAMETER FirstName
-User's first name
-
-.PARAMETER LastName
-User's last name
-
 .PARAMETER Username
 User's username
 
@@ -26,14 +20,6 @@ Add-BWUser -FirstName matty -LastName test -Username mattes1 -InitialPass 'blah'
 function Add-BWWifiSendOnly {
     [CmdletBinding()]
     param(
-        # User's first name
-        [Parameter(Mandatory = $true)]
-        [string]
-        $FirstName,
-        # User's last name
-        [Parameter(Mandatory = $true)]
-        [string]
-        $LastName,
         # User's username
         [Parameter(Mandatory = $true)]
         [string]
@@ -50,7 +36,11 @@ function Add-BWWifiSendOnly {
 
     New-BWLoginUnlock
 
-    $fullName = "$FirstName $LastName $PersonalEmail"
+    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+        $nameOfSend = "BMD Wifi-only Account Details for $Username $PersonalEmail"
+    } else {
+        $nameOfSend = "BMD Wifi-only Account Details for $Username"
+    }
 
     Write-Host "`nCreating Send for new user..."
     # WriteLog "[INFO] Adding new send to Sends"
@@ -61,7 +51,7 @@ function Add-BWWifiSendOnly {
 
     $sendItem = @{
         object = "send"
-        name = $fullName
+        name = $nameOfSend
         notes = $null
         type = 0
         text = @{

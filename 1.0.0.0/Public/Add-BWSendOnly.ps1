@@ -5,12 +5,6 @@ Creates a send only.
 .DESCRIPTION
 Creates a new send with user's login details without creating a corresponding vault item (probably because it already exists).
 
-.PARAMETER FirstName
-User's first name
-
-.PARAMETER LastName
-User's last name
-
 .PARAMETER Username
 User's username
 
@@ -26,14 +20,6 @@ Add-BWUser -FirstName matty -LastName test -Username mattes1 -InitialPass 'blah'
 function Add-BWSendOnly {
     [CmdletBinding()]
     param(
-        # User's first name
-        [Parameter(Mandatory = $true)]
-        [string]
-        $FirstName,
-        # User's last name
-        [Parameter(Mandatory = $true)]
-        [string]
-        $LastName,
         # User's username
         [Parameter(Mandatory = $true)]
         [string]
@@ -50,8 +36,6 @@ function Add-BWSendOnly {
 
     New-BWLoginUnlock
 
-    $fullName = "$FirstName $LastName $PersonalEmail"
-
     Write-Host "`nCreating Send for new user..."
     # WriteLog "[INFO] Adding new send to Sends"
     $getDate = Get-Date
@@ -59,9 +43,15 @@ function Add-BWSendOnly {
     $time = ($getDate).ToString("HH:mm:ss.fff")
     $deletionDate = "$($date)T$($time)Z" #needs to have T and Z for some reason
 
+    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+        $nameOfSend = "BMD Account Details for $Username $PersonalEmail"
+    } else {
+        $nameOfSend = "BMD Account Details for $Username"
+    }
+
     $sendItem = @{
         object = "send"
-        name = $fullName
+        name = $nameOfSend
         notes = $null
         type = 0
         text = @{

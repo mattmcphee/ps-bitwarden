@@ -15,7 +15,7 @@ function Add-BWBitLocker {
     $getDate = Get-Date
     $date = ($getDate).AddDays(7).ToString("yyyy-MM-dd")
     $time = ($getDate).ToString("HH:mm:ss.fff")
-    $deletionDate = "$($date)T$($time)Z" #needs to have T and Z for some reason
+    $deletionDate = "$($date)T$($time)Z" #needs to have T and Z
 
     $computer = Get-ADComputer $ComputerName
     $BitlockerObject = Get-ADObject -Filter {objectclass -eq 'msFVE-RecoveryInformation'} -SearchBase $computer -Properties 'msFVE-RecoveryPassword'

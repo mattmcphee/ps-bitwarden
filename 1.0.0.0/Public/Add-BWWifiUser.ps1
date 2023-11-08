@@ -51,14 +51,18 @@ function Add-BWWifiUser {
 
     New-BWLoginUnlock
 
-    $fullName = "$FirstName $LastName $PersonalEmail"
+    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+        $nameOfVaultItem = "$FirstName $LastName $PersonalEmail"
+    } else {
+        $nameOfVaultItem = "$FirstName $LastName"
+    }
 
     $vaultItem = @{
         organizationId = 'f97245e0-5ce6-4c36-ac40-ad0c004ae861'
         collectionIds  = @("0f3a5a11-66dc-4cf2-af8a-b00a0014d120", "d663b595-1c92-43cc-82d5-b00a0014c32e")
         folderId       = $null
         type           = 1
-        name           = $fullName
+        name           = $nameOfVaultItem
         notes          = $null
         favorite       = $false
         fields         = $null
@@ -84,9 +88,11 @@ function Add-BWWifiUser {
     $time = ($getDate).ToString("HH:mm:ss.fff")
     $deletionDate = "$($date)T$($time)Z" #needs to have T and Z for some reason
 
+    $nameOfSend = "BMD Wifi-only Account Details for $nameOfVaultItem"
+
     $sendItem = @{
         object = "send"
-        name = $fullName
+        name = $nameOfSend
         notes = $null
         type = 0
         text = @{
