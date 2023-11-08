@@ -37,9 +37,9 @@ function Add-BWWifiSendOnly {
     New-BWLoginUnlock
 
     if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
-        $nameOfSend = "BMD Wifi-only Account Details for $Username $PersonalEmail"
+        $nameOfSend = "$Username $PersonalEmail"
     } else {
-        $nameOfSend = "BMD Wifi-only Account Details for $Username"
+        $nameOfSend = $Username
     }
 
     Write-Host "`nCreating Send for new user..."
