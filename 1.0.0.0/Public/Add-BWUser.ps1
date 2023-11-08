@@ -82,7 +82,7 @@ function Add-BWUser {
     $time = ($getDate).ToString("HH:mm:ss.fff")
     $deletionDate = "$($date)T$($time)Z" #needs to have T and Z for some reason
 
-    $nameOfSend = "BMD Account Details for $nameOfVaultItem"
+    $nameOfSend = $nameOfVaultItem
 
     $sendItem = @{
         object = "send"

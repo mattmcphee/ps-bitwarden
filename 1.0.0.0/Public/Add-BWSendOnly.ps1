@@ -44,9 +44,9 @@ function Add-BWSendOnly {
     $deletionDate = "$($date)T$($time)Z" #needs to have T and Z for some reason
 
     if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
-        $nameOfSend = "BMD Account Details for $Username $PersonalEmail"
+        $nameOfSend = "$Username $PersonalEmail"
     } else {
-        $nameOfSend = "BMD Account Details for $Username"
+        $nameOfSend = $Username
     }
 
     $sendItem = @{
