@@ -29,16 +29,16 @@ function New-SendItem {
         password = $null
         disabled = $false
         hideEmail = $true
-        }
+    }
     
-        Write-Host "`nCreating $SendName..."
+    Write-Host "`nCreating $SendName..."
+
+    # WriteLog "[INFO] Outputting send url and copied url to clipboard"
+    $sendOutput = Invoke-Command -ScriptBlock { $sendItem | ConvertTo-Json | bw encode | bw send create }
+    $accessUrl = $sendOutput | ConvertFrom-Json | Select-Object -expand accessUrl
+    $accessUrl | clip
     
-        # WriteLog "[INFO] Outputting send url and copied url to clipboard"
-        $sendOutput = Invoke-Command -ScriptBlock { $sendItem | ConvertTo-Json | bw encode | bw send create }
-        $accessUrl = $sendOutput | ConvertFrom-Json | Select-Object -expand accessUrl
-        $accessUrl | clip
-        
-        Write-Host "`nSend created."
-        Write-Host "`nCopied this link to clipboard: $accessUrl"
-        Write-Host "`nComplete."
+    Write-Host "`nSend created."
+    Write-Host "`nCopied this link to clipboard: $accessUrl"
+    Write-Host "`nComplete."
 }
