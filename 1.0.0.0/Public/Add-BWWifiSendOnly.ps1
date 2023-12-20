@@ -42,36 +42,17 @@ function Add-BWWifiSendOnly {
         $nameOfSend = $Username
     }
 
-    Write-Host "`nCreating Send for new user..."
-    # WriteLog "[INFO] Adding new send to Sends"
-    $getDate = Get-Date
-    $date = ($getDate).AddDays(7).ToString("yyyy-MM-dd")
-    $time = ($getDate).ToString("HH:mm:ss.fff")
-    $deletionDate = "$($date)T$($time)Z" #needs to have T and Z for some reason
+    if (!($PSBoundParameters.ContainsKey('InitialPass'))) {
+        $sentCollId = '0f3a5a11-66dc-4cf2-af8a-b00a0014d120'
+        $allVaultItems = Invoke-Command { bw list items --collectionid $sentCollId } | ConvertFrom-Json
 
-    $sendItem = @{
-        object = "send"
-        name = $nameOfSend
-        notes = $null
-        type = 0
-        text = @{
-            text = "Username: $Username`nPassword: $InitialPass"
-            hidden = $false
+        $allVaultItems | ForEach-Object {
+            if ($_.login.username -eq $Username) {
+                $InitialPass = $_.login.password
+            }
+            break
         }
-        file = $null
-        maxAccessCount = 6
-        deletionDate = $deletionDate
-        expiratonDate = $deletionDate
-        password = $null
-        disabled = $false
-        hideEmail = $true
     }
-
-    # WriteLog "[INFO] Outputting send url and copied url to clipboard"
-    $sendOutput = Invoke-Command -ScriptBlock { $sendItem | ConvertTo-Json | bw encode | bw send create }
-    Write-Host "`nSend created."
-    $accessUrl = $sendOutput | ConvertFrom-Json | Select-Object -expand accessUrl
-    Write-Host "`nCopied this link to clipboard: $accessUrl"
-    $accessUrl | clip
-    Write-Host "Complete."
+    
+    New-SendItem -SendName $nameOfSend -SendContents "Username: $Username`nPassword: $InitialPass"
 }

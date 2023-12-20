@@ -12,7 +12,7 @@ Set-AllNewItemsToSentCollection
 function Set-AllNewItemsToSentCollection {
     New-BWLoginUnlock
 
-    $sentCollId = '"0f3a5a11-66dc-4cf2-af8a-b00a0014d120"'
+    $sentCollId = '0f3a5a11-66dc-4cf2-af8a-b00a0014d120'
     $newCollId = 'd663b595-1c92-43cc-82d5-b00a0014c32e'
 
     Write-Host 'getting list of items in users/new...'

@@ -11,6 +11,13 @@ unlocks vault and gets the session key and stores it in an env var
 New-BWLoginUnlock
 #>
 function New-BWLoginUnlock {
+    if (Test-Path env:BW_PASSWORD) {
+        $bwPass = $env:BW_PASSWORD
+    } else {
+        $bwPass = Read-Host -AsSecureString "BitWarden Master Password"
+        $env:BW_PASSWORD = ConvertFrom-SecureString -SecureString $bwPass -AsPlainText
+    }
+
     if (Test-Path env:BW_CLIENTID) {
         $bwClientId = $env:BW_CLIENTID
     } else {
@@ -24,20 +31,12 @@ function New-BWLoginUnlock {
         $bwClientSecret = Read-Host "BitWarden Client Secret"
         $env:BW_CLIENTSECRET = $bwClientSecret
     }
-    
-    if (Test-Path env:BW_PASSWORD) {
-        $bwPass = $env:BW_PASSWORD
-    } else {
-        $bwPass = Read-Host -AsSecureString "BitWarden Master Password"
-        $env:BW_PASSWORD = ConvertFrom-SecureString -SecureString $bwPass -AsPlainText
-    }
-    
-    Write-Host 'logging into bw cli...'
+     
+    Write-Host "`nlogging into bw cli..."
     $loginInfo = Invoke-Command -ScriptBlock { bw login --apikey }
-    Write-Host 'logged in.'
     
-    Write-Host 'unlocking vault...'
+    Write-Host "`nunlocking vault..."
     $unlockInfo = Invoke-Command -ScriptBlock { bw unlock --passwordenv BW_PASSWORD }
     $env:BW_SESSION = $unlockInfo[4].Split('"')[1]
-    Write-Host 'unlocked. session key extracted.'
+    Write-Host "`nunlocked. session key extracted."
 }

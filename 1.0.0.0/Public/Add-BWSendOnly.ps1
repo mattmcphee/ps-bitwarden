@@ -24,8 +24,8 @@ function Add-BWSendOnly {
         [Parameter(Mandatory = $true)]
         [string]
         $Username,
-        # Initial password that was generated
-        [Parameter(Mandatory = $true)]
+        # Initial password that was generated (optional)
+        [Parameter(Mandatory = $false)]
         [string]
         $InitialPass,
         # User's personal email address (optional)
@@ -36,42 +36,23 @@ function Add-BWSendOnly {
 
     New-BWLoginUnlock
 
-    Write-Host "`nCreating Send for new user..."
-    # WriteLog "[INFO] Adding new send to Sends"
-    $getDate = Get-Date
-    $date = ($getDate).AddDays(7).ToString("yyyy-MM-dd")
-    $time = ($getDate).ToString("HH:mm:ss.fff")
-    $deletionDate = "$($date)T$($time)Z" #needs to have T and Z for some reason
-
     if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
         $nameOfSend = "$Username $PersonalEmail"
     } else {
         $nameOfSend = $Username
     }
 
-    $sendItem = @{
-        object = "send"
-        name = $nameOfSend
-        notes = $null
-        type = 0
-        text = @{
-            text = "Username: $Username@bmd.com.au`nPassword: $InitialPass"
-            hidden = $false
-        }
-        file = $null
-        maxAccessCount = 6
-        deletionDate = $deletionDate
-        expiratonDate = $deletionDate
-        password = $null
-        disabled = $false
-        hideEmail = $true
-    }
+    if (!($PSBoundParameters.ContainsKey('InitialPass'))) {
+        $sentCollId = '0f3a5a11-66dc-4cf2-af8a-b00a0014d120'
+        $allVaultItems = Invoke-Command { bw list items --collectionid $sentCollId } | ConvertFrom-Json
 
-    # WriteLog "[INFO] Outputting send url and copied url to clipboard"
-    $sendOutput = Invoke-Command -ScriptBlock { $sendItem | ConvertTo-Json | bw encode | bw send create }
-    Write-Host "`nSend created."
-    $accessUrl = $sendOutput | ConvertFrom-Json | Select-Object -expand accessUrl
-    Write-Host "`nCopied this link to clipboard: $accessUrl"
-    $accessUrl | clip
-    Write-Host "Complete."
+        $allVaultItems | ForEach-Object {
+            if ($_.login.username -eq $Username) {
+                $InitialPass = $_.login.password
+            }
+            break
+        }
+    }
+    
+    New-SendItem -SendName $nameOfSend -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
 }
