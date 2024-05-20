@@ -37,5 +37,5 @@ function New-VaultItem {
     }
 
     Write-Host "`ncreating vault item..."
-    Invoke-Command -ScriptBlock { $vaultItem | ConvertTo-Json | bw encode | bw create item }
+    $vaultItem | ConvertTo-Json | bw encode | bw create item
 }

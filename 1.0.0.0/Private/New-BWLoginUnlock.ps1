@@ -33,10 +33,10 @@ function New-BWLoginUnlock {
     }
      
     Write-Host "`nlogging into bw cli..."
-    $loginInfo = Invoke-Command -ScriptBlock { bw login --apikey }
+    bw login --apikey
     
     Write-Host "`nunlocking vault..."
-    $unlockInfo = Invoke-Command -ScriptBlock { bw unlock --passwordenv BW_PASSWORD }
+    $unlockInfo = bw unlock --passwordenv BW_PASSWORD
     $env:BW_SESSION = $unlockInfo[4].Split('"')[1]
     Write-Host "`nunlocked. session key extracted."
 }

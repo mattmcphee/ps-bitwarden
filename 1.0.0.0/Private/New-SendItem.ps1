@@ -23,7 +23,7 @@ function New-SendItem {
             hidden = $false
         }
         file = $null
-        maxAccessCount = 6
+        maxAccessCount = 8
         deletionDate = $deletionDate
         expiratonDate = $deletionDate
         password = $null
