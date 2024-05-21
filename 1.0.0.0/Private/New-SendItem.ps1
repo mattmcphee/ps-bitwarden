@@ -34,7 +34,7 @@ function New-SendItem {
     Write-Host "`nCreating $SendName..."
 
     # WriteLog "[INFO] Outputting send url and copied url to clipboard"
-    $sendOutput = Invoke-Command -ScriptBlock { $sendItem | ConvertTo-Json | bw encode | bw send create }
+    $sendOutput = $sendItem | ConvertTo-Json | bw encode | bw send create
     $accessUrl = $sendOutput | ConvertFrom-Json | Select-Object -expand accessUrl
     $accessUrl | clip
     
