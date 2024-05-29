@@ -8,9 +8,9 @@ Helper function that sets up api key and password env vars and then logs in
 unlocks vault and gets the session key and stores it in an env var
 
 .EXAMPLE
-New-BWLoginUnlock
+Unlock-BW
 #>
-function New-BWLoginUnlock {
+function Unlock-BW {
     if (Test-Path env:BW_PASSWORD) {
         $bwPass = $env:BW_PASSWORD
     } else {

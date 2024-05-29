@@ -43,7 +43,7 @@ function Add-BWUser {
         $PersonalEmail
     )
 
-    New-BWLoginUnlock
+    Unlock-BW
 
     if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
         $nameOfVaultItem = "$FirstName $LastName $PersonalEmail"

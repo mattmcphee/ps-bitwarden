@@ -34,7 +34,7 @@ function Add-BWSendOnly {
         $PersonalEmail
     )
 
-    New-BWLoginUnlock
+    Unlock-BW
 
     if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
         $nameOfSend = "$Username $PersonalEmail"

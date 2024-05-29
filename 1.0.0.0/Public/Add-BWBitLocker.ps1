@@ -7,7 +7,7 @@ function Add-BWBitLocker {
         $ComputerName
     )
 
-    New-BWLoginUnlock
+    Unlock-BW
 
     Write-Host "Getting recovery code..."
 
