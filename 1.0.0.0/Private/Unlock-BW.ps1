@@ -31,12 +31,14 @@ function Unlock-BW {
         $bwClientSecret = Read-Host "BitWarden Client Secret"
         $env:BW_CLIENTSECRET = $bwClientSecret
     }
-     
-    Write-Host "`nlogging into bw cli..."
-    bw login --apikey
     
-    Write-Host "`nunlocking vault..."
+    Write-Host
+    Write-Host "Logging into BitWarden..."
+    bw login --apikey | Out-Null
+    Write-Host
+    Write-Host "Unlocking vault..."
     $unlockInfo = bw unlock --passwordenv BW_PASSWORD
     $env:BW_SESSION = $unlockInfo[4].Split('"')[1]
-    Write-Host "`nVault unlocked."
+    Write-Host
+    Write-Host "Vault unlocked." -ForegroundColor Green
 }

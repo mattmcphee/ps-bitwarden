@@ -12,7 +12,8 @@ Lock-BW
 #>
 function Lock-BW {
     Write-Host "Locking vault..."
+    Write-Host
     bw lock
-    Write-Host "Logging out..."
-    bw logout
+    Write-Host
+    Write-Host
 }

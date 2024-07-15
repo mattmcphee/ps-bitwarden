@@ -36,6 +36,9 @@ function New-VaultItem {
         reprompt       = 0
     }
 
-    Write-Host "`ncreating vault item..."
-    $vaultItem | ConvertTo-Json | bw encode | bw create item
+    Write-Host
+    Write-Host "Creating vault item: $VaultItemName..."
+    Write-Host
+    $vaultItem | ConvertTo-Json | bw encode | bw create item | Out-Null
+    Write-Host "Vault item created." -ForegroundColor Green
 }

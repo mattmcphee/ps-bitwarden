@@ -16,21 +16,26 @@ function Set-AllNewItemsToSentCollection {
     $newCollId = "d663b595-1c92-43cc-82d5-b00a0014c32e"
     $orgId = "f97245e0-5ce6-4c36-ac40-ad0c004ae861"
 
-    Write-Host 'getting list of items in users/new...'
+    Write-Host
+    Write-Host 'Getting a list of items in Users/New...'
     $newItems = (bw list items --collectionid $newCollId) | ConvertFrom-Json
-    
-    Write-Host 'items retrieved.'
-    Write-Host "setting each item's collection to users/sent ONLY"
+    Write-Host
+    Write-Host 'Items retrieved.'
+    Write-Host
+    Write-Host "Removing each item from Users/New..."
+    Write-Host
 
     foreach ($item in $newItems) {
         $itemId = $item.id
         $itemName = $item.name
         $sentCollIdString = '["' + $sentCollId + '"]'
-        $sentCollIdString | bw encode | bw edit item-collections $itemId --organizationid $orgId
-        Write-Host "'$($itemName)' done."
+        $sentCollIdString | bw encode | bw edit item-collections $itemId --organizationid $orgId | Out-Null
+        Write-Host "'$($itemName)' removed."
+        Write-Host
     }
 
-    Write-Host 'all items in users/new removed.'
+    Write-Host 'All items in Users/New removed.'
+    Write-Host
 
     Lock-BW
 }

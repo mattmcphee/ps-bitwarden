@@ -1,4 +1,4 @@
-function Add-TempAccessPass {
+function Add-BWTempAccessPass {
   [CmdletBinding()]
   param (
     # Username

@@ -31,14 +31,18 @@ function New-SendItem {
         hideEmail = $true
     }
     
-    Write-Host "`nCreating $SendName..."
+    Write-Host
+    Write-Host "Creating send item: $SendName..."
 
     # WriteLog "[INFO] Outputting send url and copied url to clipboard"
     $sendOutput = $sendItem | ConvertTo-Json | bw encode | bw send create
     $accessUrl = $sendOutput | ConvertFrom-Json | Select-Object -expand accessUrl
     $accessUrl | clip
     
-    Write-Host "`nSend created."
-    Write-Host "`nCopied this link to clipboard: $accessUrl"
-    Write-Host "`nComplete."
+    Write-Host
+    Write-Host "Send created." -ForegroundColor Green
+    Write-Host
+    Write-Host "Copied this link to clipboard: $accessUrl" `
+    -ForegroundColor Cyan
+    Write-Host
 }
