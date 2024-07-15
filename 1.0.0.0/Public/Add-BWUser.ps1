@@ -54,4 +54,6 @@ function Add-BWUser {
     New-VaultItem -VaultItemName $nameOfVaultItem -Username $Username -InitialPass $InitialPass
 
     New-SendItem -SendName $nameOfVaultItem -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
+
+    Lock-BW
 }

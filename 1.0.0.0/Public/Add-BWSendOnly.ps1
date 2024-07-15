@@ -55,4 +55,6 @@ function Add-BWSendOnly {
     }
     
     New-SendItem -SendName $nameOfSend -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
+
+    Lock-BW
 }

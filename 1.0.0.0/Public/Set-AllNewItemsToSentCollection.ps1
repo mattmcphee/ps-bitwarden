@@ -31,4 +31,6 @@ function Set-AllNewItemsToSentCollection {
     }
 
     Write-Host 'all items in users/new removed.'
+
+    Lock-BW
 }

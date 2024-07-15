@@ -38,5 +38,5 @@ function Unlock-BW {
     Write-Host "`nunlocking vault..."
     $unlockInfo = bw unlock --passwordenv BW_PASSWORD
     $env:BW_SESSION = $unlockInfo[4].Split('"')[1]
-    Write-Host "`nunlocked. session key extracted."
+    Write-Host "`nVault unlocked."
 }

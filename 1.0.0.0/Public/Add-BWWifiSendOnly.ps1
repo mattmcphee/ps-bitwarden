@@ -55,4 +55,6 @@ function Add-BWWifiSendOnly {
     }
     
     New-SendItem -SendName $nameOfSend -SendContents "Username: $Username`nPassword: $InitialPass"
+
+    Lock-BW
 }

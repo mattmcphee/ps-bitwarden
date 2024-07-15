@@ -17,4 +17,6 @@ function Add-BWBitLocker {
     $recoveryCode = $recoveryCodeObject.'msfve-recoverypassword'
 
     New-SendItem -SendName "BitLocker Recovery Code for $ComputerName" -SendContents "Bitlocker Recovery Code: $recoveryCode"
+
+    Lock-BW
 }

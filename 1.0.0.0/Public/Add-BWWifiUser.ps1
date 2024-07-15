@@ -60,4 +60,6 @@ function Add-BWWifiUser {
     New-VaultItem -VaultItemName $nameOfVaultItem -Username $Username -InitialPass $InitialPass
 
     New-SendItem -SendName $nameOfVaultItem -SendContents "Username: $Username`nPassword: $InitialPass"
+
+    Lock-BW
 }
