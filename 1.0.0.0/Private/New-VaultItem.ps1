@@ -14,10 +14,16 @@ function New-VaultItem {
         [string]
         $InitialPass
     )
+
+    $orgId = 'f97245e0-5ce6-4c36-ac40-ad0c004ae861'
+    $collectionIds = @(
+        "0f3a5a11-66dc-4cf2-af8a-b00a0014d120",
+        "d663b595-1c92-43cc-82d5-b00a0014c32e"
+    )
     
     $vaultItem = @{
-        organizationId = 'f97245e0-5ce6-4c36-ac40-ad0c004ae861'
-        collectionIds  = @("0f3a5a11-66dc-4cf2-af8a-b00a0014d120", "d663b595-1c92-43cc-82d5-b00a0014c32e")
+        organizationId = $orgId
+        collectionIds  = $collectionIds
         folderId       = $null
         type           = 1
         name           = $VaultItemName
@@ -39,6 +45,12 @@ function New-VaultItem {
     Write-Host
     Write-Host "Creating vault item: $VaultItemName..."
     Write-Host
-    $vaultItem | ConvertTo-Json | bw encode | bw create item | Out-Null
+
+    $vaultItem |
+    ConvertTo-Json |
+    Invoke-Expression -Command "bw encode" |
+    Invoke-Expression -Command "bw create item" |
+    Out-Null
+    
     Write-Host "Vault item created." -ForegroundColor Green
 }
