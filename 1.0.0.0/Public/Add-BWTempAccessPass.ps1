@@ -10,10 +10,13 @@ function Add-BWTempAccessPass {
         [string]
         $TempAccessPass
     )
-
-    Unlock-BW
-
-    New-SendItem -SendName $Username -SendContents "Temporary Access Pass: $TempAccessPass"
-
-    Lock-BW
+    try {
+        Unlock-BW
+    
+        New-SendItem -SendName $Username -SendContents "Temporary Access Pass: $TempAccessPass"
+    
+        Lock-BW
+    } catch {
+        throw $_
+    }
 }

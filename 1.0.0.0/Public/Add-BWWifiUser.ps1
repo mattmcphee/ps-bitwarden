@@ -48,18 +48,21 @@ function Add-BWWifiUser {
         [string]
         $PersonalEmail
     )
-
-    Unlock-BW
-
-    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
-        $nameOfVaultItem = "$FirstName $LastName $PersonalEmail"
-    } else {
-        $nameOfVaultItem = "$FirstName $LastName"
+    try {
+        Unlock-BW
+    
+        if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+            $nameOfVaultItem = "$FirstName $LastName $PersonalEmail"
+        } else {
+            $nameOfVaultItem = "$FirstName $LastName"
+        }
+    
+        New-VaultItem -VaultItemName $nameOfVaultItem -Username $Username -InitialPass $InitialPass
+    
+        New-SendItem -SendName $nameOfVaultItem -SendContents "Username: $Username`nPassword: $InitialPass"
+    
+        Lock-BW
+    } catch {
+        throw $_
     }
-
-    New-VaultItem -VaultItemName $nameOfVaultItem -Username $Username -InitialPass $InitialPass
-
-    New-SendItem -SendName $nameOfVaultItem -SendContents "Username: $Username`nPassword: $InitialPass"
-
-    Lock-BW
 }

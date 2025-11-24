@@ -34,15 +34,19 @@ function Add-BWSendOnly {
         $PersonalEmail
     )
 
-    Unlock-BW
+    try {
+        Unlock-BW
 
-    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
-        $nameOfSend = "$Username $PersonalEmail"
-    } else {
-        $nameOfSend = $Username
+        if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+            $nameOfSend = "$Username $PersonalEmail"
+        } else {
+            $nameOfSend = $Username
+        }
+        
+        New-SendItem -SendName $nameOfSend -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
+
+        Lock-BW
+    } catch {
+        throw $_
     }
-    
-    New-SendItem -SendName $nameOfSend -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
-
-    Lock-BW
 }

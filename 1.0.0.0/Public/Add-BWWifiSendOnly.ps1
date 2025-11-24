@@ -34,15 +34,19 @@ function Add-BWWifiSendOnly {
         $PersonalEmail
     )
 
-    Unlock-BW
-
-    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
-        $nameOfSend = "$Username $PersonalEmail"
-    } else {
-        $nameOfSend = $Username
-    }
+    try {
+        Unlock-BW
     
-    New-SendItem -SendName $nameOfSend -SendContents "Username: $Username`nPassword: $InitialPass"
-
-    Lock-BW
+        if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+            $nameOfSend = "$Username $PersonalEmail"
+        } else {
+            $nameOfSend = $Username
+        }
+        
+        New-SendItem -SendName $nameOfSend -SendContents "Username: $Username`nPassword: $InitialPass"
+    
+        Lock-BW
+    } catch {
+        throw $_
+    }
 }

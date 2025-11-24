@@ -7,16 +7,19 @@ function Get-BWSecret {
         [string]
         $Type
     )
-    
-    switch ($Type) {
-        "Password" {
-            return (New-Object System.Net.NetworkCredential("", $script:BW_PASSWORD)).Password
+    try {
+        switch ($Type) {
+            "Password" {
+                return (New-Object System.Net.NetworkCredential("", $script:BW_PASSWORD)).Password
+            }
+            "Secret" {
+                return (New-Object System.Net.NetworkCredential("", $script:BW_CLIENTSECRET)).Password
+            }
+            "Id" {
+                return (New-Object System.Net.NetworkCredential("", $script:BW_CLIENTID)).Password
+            }
         }
-        "Secret" {
-            return (New-Object System.Net.NetworkCredential("", $script:BW_CLIENTSECRET)).Password
-        }
-        "Id" {
-            return (New-Object System.Net.NetworkCredential("", $script:BW_CLIENTID)).Password
-        }
+    } catch {
+        throw $_
     }
 }

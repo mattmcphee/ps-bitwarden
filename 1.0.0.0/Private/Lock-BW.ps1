@@ -11,12 +11,16 @@ completed.
 Lock-BW
 #>
 function Lock-BW {
-    Write-Host "Locking vault..."
-    Write-Host
-
-    bw lock
-    Remove-Item $env:BW_SESSION
+    try {
+        Write-Host "Locking vault..."
+        Write-Host
     
-    Write-Host
-    Write-Host
+        bw lock
+        Remove-Item $env:BW_SESSION
+        
+        Write-Host
+        Write-Host
+    } catch {
+        throw $_
+    }
 }
