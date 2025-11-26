@@ -24,37 +24,29 @@ function Add-BWSendOnly {
         [Parameter(Mandatory = $true)]
         [string]
         $Username,
-        # Initial password that was generated (optional)
-        [Parameter(Mandatory = $false)]
+        # Initial password that was generated 
+        [Parameter(Mandatory = $true)]
         [string]
         $InitialPass,
-        # User's personal email address (optional)
+        # User's personal email address
         [Parameter(Mandatory = $false)]
         [string]
         $PersonalEmail
     )
 
-    Unlock-BW
+    try {
+        Unlock-BW
 
-    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
-        $nameOfSend = "$Username $PersonalEmail"
-    } else {
-        $nameOfSend = $Username
-    }
-
-    if (!($PSBoundParameters.ContainsKey('InitialPass'))) {
-        $sentCollId = '0f3a5a11-66dc-4cf2-af8a-b00a0014d120'
-        $allVaultItems = Invoke-Command { bw list items --collectionid $sentCollId } | ConvertFrom-Json
-
-        $allVaultItems | ForEach-Object {
-            if ($_.login.username -eq $Username) {
-                $InitialPass = $_.login.password
-            }
-            break
+        if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+            $nameOfSend = "$Username $PersonalEmail"
+        } else {
+            $nameOfSend = $Username
         }
-    }
-    
-    New-SendItem -SendName $nameOfSend -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
+        
+        New-SendItem -SendName $nameOfSend -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
 
-    Lock-BW
+        Lock-BW
+    } catch {
+        throw $_
+    }
 }

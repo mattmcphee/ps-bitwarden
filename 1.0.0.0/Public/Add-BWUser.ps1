@@ -42,18 +42,21 @@ function Add-BWUser {
         [string]
         $PersonalEmail
     )
-
-    Unlock-BW
-
-    if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
-        $nameOfVaultItem = "$FirstName $LastName $PersonalEmail"
-    } else {
-        $nameOfVaultItem = "$FirstName $LastName"
+    try {
+        Unlock-BW
+    
+        if ($PSBoundParameters.ContainsKey('PersonalEmail')) {
+            $nameOfVaultItem = "$FirstName $LastName $PersonalEmail"
+        } else {
+            $nameOfVaultItem = "$FirstName $LastName"
+        }
+    
+        New-VaultItem -VaultItemName $nameOfVaultItem -Username $Username -InitialPass $InitialPass
+    
+        New-SendItem -SendName $nameOfVaultItem -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
+    
+        Lock-BW
+    } catch {
+        throw $_
     }
-
-    New-VaultItem -VaultItemName $nameOfVaultItem -Username $Username -InitialPass $InitialPass
-
-    New-SendItem -SendName $nameOfVaultItem -SendContents "Username: $Username@bmd.com.au`nPassword: $InitialPass"
-
-    Lock-BW
 }
