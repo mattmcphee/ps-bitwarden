@@ -23,35 +23,42 @@ function New-VaultItem {
         )
         
         $vaultItem = @{
-            organizationId = $orgId
-            collectionIds  = $collectionIds
-            folderId       = $null
-            type           = 1
-            name           = $VaultItemName
-            notes          = $null
-            favorite       = $false
-            fields         = $null
-            login          = @{
-                uris     = $null
-                username = $Username
-                password = $InitialPass
-                totp     = $null
+            passwordHistory = @()
+            revisionDate    = $null
+            creationDate    = $null
+            deletedDate     = $null
+            archivedDate    = $null
+            organizationId  = $orgId
+            collectionIds   = $collectionIds
+            folderId        = $null
+            type            = 1
+            name            = $VaultItemName
+            notes           = $null
+            favorite        = $false
+            fields          = @()
+            login           = @{
+                uris             = @()
+                username         = $Username
+                password         = $InitialPass
+                totp             = $null
+                fido2Credentials = @()
             }
-            securenote     = $null
-            card           = $null
-            identity       = $null
-            reprompt       = 0
+            securenote      = $null
+            card            = $null
+            identity        = $null
+            sshKey          = $null
+            reprompt        = 0
         }
     
         Write-Host
         Write-Host "Creating vault item: $VaultItemName..."
         Write-Host
     
-        $vaultItem |
-        ConvertTo-Json |
-        Invoke-Expression -Command "bw encode" |
-        Invoke-Expression -Command "bw create item" |
-        Out-Null
+        $vaultItem | ConvertTo-Json | bw encode | bw create item 2> $null
+        
+        if ($LASTEXITCODE -ne 0) {
+            throw "Could not create vault item. The vault needs to be unlocked - run bw status to verify. Run Clear-BWAppData and start again if issue persists."
+        }
         
         Write-Host "Vault item created." -ForegroundColor Green
     } catch {

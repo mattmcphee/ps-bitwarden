@@ -15,8 +15,11 @@ function Lock-BW {
         Write-Host "Locking vault..."
         Write-Host
     
-        bw lock
-        Remove-Item $env:BW_SESSION
+        Invoke-Bw -Command "lock"
+        $env:BW_PASSWORD = $null
+        $env:BW_CLIENTID = $null
+        $env:BW_CLIENTSECRET = $null
+        $env:BW_SESSION = $null
         
         Write-Host
         Write-Host
