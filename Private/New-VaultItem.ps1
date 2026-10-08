@@ -49,17 +49,17 @@ function New-VaultItem {
             sshKey          = $null
             reprompt        = 0
         }
-    
+
         Write-Host
         Write-Host "Creating vault item: $VaultItemName..."
         Write-Host
-    
-        $vaultItem | ConvertTo-Json | bw encode | bw create item 2> $null
-        
+
+        $null = $vaultItem | ConvertTo-Json | bw encode | bw create item 2> $null
+
         if ($LASTEXITCODE -ne 0) {
             throw "Could not create vault item. The vault needs to be unlocked - run bw status to verify. Run Clear-BWAppData and start again if issue persists."
         }
-        
+
         Write-Host "Vault item created." -ForegroundColor Green
     } catch {
         throw $_
