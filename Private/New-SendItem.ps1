@@ -13,7 +13,7 @@ function New-SendItem {
 
     try {
         $deletionDate = Get-DeletionDate
-    
+
         $sendItem = @{
             object         = "send"
             name           = $SendName
@@ -24,7 +24,7 @@ function New-SendItem {
                 hidden = $false
             }
             file           = $null
-            maxAccessCount = "8"
+            maxAccessCount = 8
             deletionDate   = $deletionDate
             expirationDate = $deletionDate
             password       = $null
@@ -34,7 +34,7 @@ function New-SendItem {
 
         Write-Host
         Write-Host "Creating send item: $SendName..."
-    
+
         $sendOutput = $sendItem | ConvertTo-Json | bw encode | bw send create 2> $null
 
         if ($LASTEXITCODE -ne 0) {
@@ -43,7 +43,7 @@ function New-SendItem {
 
         $accessUrl = $sendOutput | ConvertFrom-Json | Select-Object -ExpandProperty accessUrl
         $accessUrl | Set-Clipboard
-        
+
         Write-Host
         Write-Host "Send created." -ForegroundColor Green
         Write-Host

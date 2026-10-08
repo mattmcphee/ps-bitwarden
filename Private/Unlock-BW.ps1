@@ -13,21 +13,21 @@ Unlock-BW
 function Unlock-BW {
     try {
         Set-BWSessionSecrets
-    
+
         Write-Host
         Write-Host "Logging into Bitwarden..."
-    
+
         $env:BW_CLIENTID = Get-BWSecret -Type "Id"
         $env:BW_CLIENTSECRET = Get-BWSecret -Type "Secret"
         Invoke-Bw -Command "login --apikey" -IgnoreExitCodes | Out-Null
-    
+
         Write-Host
         Write-Host "Unlocking vault..."
-    
+
         $env:BW_PASSWORD = Get-BWSecret -Type "Password"
         $unlockInfo = Invoke-Bw -Command "unlock --passwordenv BW_PASSWORD"
         $env:BW_SESSION = ($unlockInfo | Select-String -Pattern 'BW_SESSION="(.*)"').matches.groups[1].value
-    
+
         Write-Host
         Write-Host "Vault unlocked." -ForegroundColor Green
     } catch {

@@ -18,7 +18,7 @@ function Invoke-Bw {
         Write-Host "Then run: choco install bitwarden-cli -y"
         throw "bitwarden-cli not found!"
     }
-    
+
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = "bw"
     $processInfo.Arguments = $Command
